@@ -15,20 +15,20 @@ pub fn main() anyerror!void {
 
     if (args.len != 2 and !(args.len == 3 and std.mem.eql(u8, args[1], "-e"))) {
         try stderr.print("usage: brainfuck [-e expression] [file path]\n", .{});
-        std.os.exit(1);
+        std.process.exit(1);
     }
 
     if (args.len == 3) {
         const program = args[2];
-        interpret(program, stdin, stdout, stderr) catch std.os.exit(1);
+        interpret(program, stdin, stdout, stderr) catch std.process.exit(1);
     } else if (args.len == 2) {
         const file_path = args[1];
         const program = std.fs.cwd().readFileAlloc(allocator, file_path, max_file_size) catch {
             try stderr.print("File not found: {s}\n", .{file_path});
-            std.os.exit(1);
+            std.process.exit(1);
         };
         defer allocator.free(program);
-        interpret(program, stdin, stdout, stderr) catch std.os.exit(1);
+        interpret(program, stdin, stdout, stderr) catch std.process.exit(1);
     }
 }
 
