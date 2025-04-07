@@ -59,5 +59,5 @@ pub fn main() anyerror!void {
 const interpret = @import("257bf.zig").interpret;
 
 comptime {
-    _ = &@import("257bf.zig");
+    _ = &@import("257bf-test.zig");
 }
