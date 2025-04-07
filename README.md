@@ -1,15 +1,32 @@
-# Brainfuck-zig
+# 257bf
 
-Embeddable zig brainfuck interpreter.
+[257-wrap brainfuck] interpreter.
 
-## Usage
+[257-wrap brainfuck]: https://www.esolangs.org/wiki/257-wrap_brainfuck
 
-`usage: brainfuck [-e expression] [file path]`
+## Dependency
 
-## Embedding
+Zig compiler.
 
-```zig
-const interpreter = @import("brainfuck-zig/src/main.zig").interpreter;
+## How to build
 
-try interpret(program_string, reader, writer, error_writer);
+Compiles into an executable:
+
 ```
+zig build
+```
+
+## Synopsis
+
+```
+257bf [FILE]
+257bf --code=CODE
+```
+
+## License
+
+Written by Tpeafawzen
+
+Forked from [dantecatalfamo's project](https://github.com/dantecatalfamo/brainfuck-zig)
+
+Licensed under the MIT License
