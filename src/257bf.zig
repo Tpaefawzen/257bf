@@ -40,8 +40,7 @@ pub fn interpret(program: []const u8, reader: anytype, writer: anytype, error_wr
 		was_read = false;
             },
             '-' => {
-		if (memory[index] > 0) memory[index] -= 1
-		else memory[index] = 256;
+		memory[index] = @min(memory[index]%-1, 256);
 		was_read = false;
             },
             '.' => {
