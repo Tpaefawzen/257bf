@@ -4,10 +4,16 @@
 
 Has separated code and data memory areas.
 
-Has flag wasRead; indicates 
+Has flag wasRead; indicates whether previous command was the input command.
 
-The code memory as well as program counter.
+Has byte-oriented I/O feature.
 
-The data memory as well as data pointer.
+Has success and failure exit statuses.
+
+Has program counter for code memory.
+
+Has data pointer for data memory.
 
 Unspecified maximum length of code and data officially
+
+### Code memory
