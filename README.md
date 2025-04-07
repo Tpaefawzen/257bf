@@ -4,6 +4,12 @@
 
 [257-wrap brainfuck]: https://www.esolangs.org/wiki/257-wrap_brainfuck
 
+## Features
+
+* Ignore comments
+* Lazy braces
+* EOF is falsey (but 0 is truthy) iff read command is done immediately before the brace
+
 ## Dependency
 
 Zig compiler.
@@ -19,7 +25,8 @@ zig build
 ## Synopsis
 
 ```
-257bf [FILE]
+257bf FILE
+257bf -c CODE
 257bf --code=CODE
 ```
 

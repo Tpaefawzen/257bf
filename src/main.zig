@@ -27,9 +27,14 @@ pub fn main() anyerror!void {
     var code: ?[]const u8 = null;
     var file: ?[]const u8 = null;
 
-    if (std.mem.eql(u8, args[1], "--code")) {
+    if (std.mem.eql(u8, args[1], "-c")) {
 	if (args.len < 3) return error.MissingOptionValue;
 	code = args[2];
+    } else if (std.mem.eql(u8, args[1], "--code")) {
+	if (args.len < 3) return error.MissingOptionValue;
+	code = args[2];
+    } else if (std.mem.startsWith(u8, args[1], "-c")) {
+	code = args[1][2..];
     } else if (std.mem.startsWith(u8, args[1], "--code=")) {
 	code = args[1][7..];
     } else if (std.mem.eql(u8, args[1], "-")) {
