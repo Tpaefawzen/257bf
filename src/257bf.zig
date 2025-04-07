@@ -4,13 +4,19 @@ const allocator = std.heap.page_allocator;
 const memory_size = 30_000;
 const max_file_size = 1024 * 1024 * 1024;
 
+const Data = u9;
+const Index = u32;
+const ProgramCounter = u32;
+
 pub fn interpret(program: []const u8, reader: anytype, writer: anytype, error_writer: anytype) anyerror!void {
-    var memory = [_]u8{0} ** memory_size;
-    var index: u32 = 0;
-    var program_counter: u32 = 0;
+    var memory = [_]Data{0} ** memory_size;
+    var index: Index = 0;
+    var program_counter: ProgramCounter = 0;
+    var was_read = false;
 
     while (program_counter < program.len) {
         const character = program[program_counter];
+	std.debug.assert(0 <= character and character <= 256);
 
         switch (character) {
             '>' => {
@@ -19,6 +25,7 @@ pub fn interpret(program: []const u8, reader: anytype, writer: anytype, error_wr
                     return error.IndexOutOfBounds;
                 }
                 index += 1;
+		was_read = false;
             },
             '<' => {
                 if (index == 0) {
@@ -26,22 +33,30 @@ pub fn interpret(program: []const u8, reader: anytype, writer: anytype, error_wr
                     return error.IndexOutOfBounds;
                 }
                 index -= 1;
+		was_read = false;
             },
             '+' => {
-                memory[index] +%= 1;
+                memory[index] += 1; memory[index] %= 257;
+		was_read = false;
             },
             '-' => {
-                memory[index] -%= 1;
+		if (memory[index] > 0) memory[index] -= 1
+		else memory[index] = 256;
+		was_read = false;
             },
             '.' => {
-                const out_byte: u8 = memory[index];
-                try writer.writeByte(out_byte);
-            },
-            ',' => {
-                memory[index] = reader.readByte() catch 0;
+		if ( memory[index] == 256 ) {
+		    memory[index] = reader.readByte() catch 256;
+		    was_read = true;
+		} else {
+                    const out_byte: u8 = @intCast(memory[index]);
+                    try writer.writeByte(out_byte);
+		    was_read = false;
+		}
             },
             '[' => {
-                if (memory[index] == 0) {
+		const enter_loop = if (was_read) memory[index] != 256 else memory[index] != 0;
+                if (!enter_loop) {
                     const start = program_counter;
                     var depth: u32 = 1;
                     while (program_counter < program.len - 1) {
@@ -62,9 +77,11 @@ pub fn interpret(program: []const u8, reader: anytype, writer: anytype, error_wr
                         return error.MissingClosingBracket;
                     }
                 }
+		was_read = false;
             },
             ']' => {
-                if (memory[index] != 0) {
+		const enter_loop = if (was_read) memory[index] != 256 else memory[index] != 0;
+                if (enter_loop) {
                     const start = program_counter;
                     var depth: u32 = 1;
                     while (program_counter > 0) {
@@ -85,6 +102,7 @@ pub fn interpret(program: []const u8, reader: anytype, writer: anytype, error_wr
                         return error.MissingOpeningBracket;
                     }
                 }
+		was_read = false;
             },
             else => {},
         }
