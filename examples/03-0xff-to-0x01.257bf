@@ -1,0 +1,9 @@
+[Output every byte from 0xff to 0x01
+
+ If you have POSIX system try this:
+ 
+   257bf example/this-file.257bf | od -An -tx1c
+
+ You will see that every byte except 0x00 can be seen
+]
+--[.-]

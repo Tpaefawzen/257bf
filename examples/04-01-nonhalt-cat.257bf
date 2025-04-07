@@ -1,0 +1,5 @@
+[Cat program BUT DOES NOT HALT
+Therefore you have to terminate the program by using Ctrl-C (or Ctrl-Z)
+to send the program SIGINT
+]
++[--..[-][]+]
